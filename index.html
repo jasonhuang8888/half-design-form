@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Half Design 泮空間設計 — 客戶需求調查表</title>
+<style>
+  :root {
+    --brand: #799B8E;
+    --brand-dark: #5a7a6e;
+    --brand-light: #a8c4ba;
+    --brand-pale: #f0f5f3;
+    --brand-xpale: #f8fbfa;
+    --text: #2c2c2c;
+    --text-muted: #7a7a7a;
+    --border: #dde8e4;
+    --white: #ffffff;
+    --shadow: 0 2px 16px rgba(121,155,142,0.10);
+    --shadow-hover: 0 6px 28px rgba(121,155,142,0.18);
+    --radius: 14px;
+    --radius-sm: 8px;
+    --transition: 0.22s cubic-bezier(.4,0,.2,1);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Serif TC', 'Georgia', serif;
+    background: #edf2f0;
+    color: var(--text);
+    min-height: 100vh;
+    padding: 0 0 60px;
+  }
+
+  /* HEADER */
+  .header-bar {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    padding: 22px 40px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 12px rgba(121,155,142,0.08);
+  }
+
+  .logo-area {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .logo-img { height: 48px; width: auto; display: block; }
+
+  .progress-area { display: flex; align-items: center; gap: 12px; font-size: 13px; color: var(--text-muted); }
+  .progress-bar-wrap { width: 140px; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: var(--brand); border-radius: 2px; transition: width 0.4s ease; }
+
+  /* FORM WRAPPER */
+  .form-wrap {
+    max-width: 780px;
+    margin: 40px auto 0;
+    padding: 0 20px;
+  }
+
+  /* FORM TITLE */
+  .form-title-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    border-left: 5px solid var(--brand);
+    padding: 36px 40px;
+    margin-bottom: 28px;
+    box-shadow: var(--shadow);
+  }
+  .form-title-card h1 {
+    font-family: 'Cormorant Garamond', 'Noto Serif TC', serif;
+    font-size: 26px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.4;
+    margin-bottom: 12px;
+  }
+  .form-title-card .subtitle { font-size: 14px; color: var(--text-muted); line-height: 1.8; }
+
+  /* SECTION */
+  .section-header {
+    background: var(--brand);
+    color: var(--white);
+    border-radius: var(--radius) var(--radius) 0 0;
+    padding: 16px 28px;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-header .icon { font-size: 16px; opacity: 0.9; }
+
+  .section-card {
+    background: var(--white);
+    border-radius: 0 0 var(--radius) var(--radius);
+    margin-bottom: 32px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+
+  .section-body { padding: 28px; }
+
+  /* FIELD */
+  .field { margin-bottom: 26px; }
+  .field:last-child { margin-bottom: 0; }
+
+  .field-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 10px;
+    display: flex;
+    gap: 6px;
+    align-items: baseline;
+  }
+  .field-label .en { font-size: 12px; color: var(--text-muted); font-weight: 400; }
+  .field-label .req { color: #c5705a; font-size: 13px; }
+
+  input[type="text"], input[type="tel"], input[type="email"], input[type="date"], textarea, select {
+    width: 100%;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 11px 14px;
+    font-size: 14px;
+    font-family: inherit;
+    color: var(--text);
+    background: var(--brand-xpale);
+    transition: border-color var(--transition), box-shadow var(--transition);
+    outline: none;
+  }
+  input:focus, textarea:focus, select:focus {
+    border-color: var(--brand);
+    box-shadow: 0 0 0 3px rgba(121,155,142,0.12);
+    background: var(--white);
+  }
+  textarea { resize: vertical; min-height: 80px; }
+  select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23799B8E' d='M1 1l5 5 5-5'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px; }
+
+  /* RADIO & CHECKBOX */
+  .options-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px; }
+  .options-grid.single-col { grid-template-columns: 1fr; }
+  .options-grid.two-col { grid-template-columns: repeat(2, 1fr); }
+
+  .opt-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border-radius: var(--radius-sm);
+    border: 1.5px solid var(--border);
+    cursor: pointer;
+    transition: all var(--transition);
+    font-size: 14px;
+    background: var(--brand-xpale);
+  }
+  .opt-label:hover { border-color: var(--brand-light); background: var(--brand-pale); }
+  .opt-label input[type="checkbox"]:checked ~ span,
+  .opt-label input[type="radio"]:checked ~ span { color: var(--brand-dark); font-weight: 600; }
+  .opt-label:has(input:checked) { border-color: var(--brand); background: var(--brand-pale); }
+
+  .opt-label input[type="checkbox"],
+  .opt-label input[type="radio"] {
+    width: 16px; height: 16px; min-width: 16px;
+    accent-color: var(--brand);
+    cursor: pointer;
+    background: none; border: none; padding: 0; box-shadow: none;
+  }
+
+  /* OTHER FIELD inline */
+  .other-field-wrap { display: flex; align-items: center; gap: 8px; }
+  .other-text-input {
+    flex: 1; border: none; border-bottom: 1.5px solid var(--border);
+    border-radius: 0; padding: 4px 6px; background: transparent;
+    font-size: 13px; color: var(--text);
+  }
+  .other-text-input:focus { border-bottom-color: var(--brand); box-shadow: none; background: transparent; }
+
+  /* DIVIDER */
+  .field-divider { height: 1px; background: var(--border); margin: 20px 0; }
+
+  /* SUB-SECTION WITHIN CARD */
+  .sub-section { margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid var(--brand-pale); }
+  .sub-section:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+  .sub-label { font-size: 13px; font-weight: 700; color: var(--brand-dark); letter-spacing: 1px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+  .sub-label::before { content: ''; width: 3px; height: 14px; background: var(--brand); border-radius: 2px; display: inline-block; }
+
+  /* Hide checkboxes inside room-item grids (toggle via card click) */
+  .item-grid .opt-label input[type="checkbox"] {
+    display: none;
+  }
+  .item-grid .opt-label { justify-content: center; text-align: center; padding: 10px 10px; }
+  /* Keep 其他 row with checkbox visible */
+  .item-grid .other-field-wrap input[type="checkbox"] {
+    display: inline-block;
+  }
+  .item-grid .other-field-wrap { justify-content: flex-start; text-align: left; }
+
+  /* ACTIONS */
+  .actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 36px;
+    padding: 0 4px;
+  }
+
+  .btn {
+    padding: 14px 36px;
+    border-radius: var(--radius-sm);
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    font-family: inherit;
+    font-weight: 600;
+    letter-spacing: 1px;
+    transition: all var(--transition);
+  }
+  .btn-primary {
+    background: var(--brand);
+    color: var(--white);
+    box-shadow: 0 4px 16px rgba(121,155,142,0.25);
+  }
+  .btn-primary:hover { background: var(--brand-dark); box-shadow: var(--shadow-hover); transform: translateY(-1px); }
+  .btn-primary:active { transform: translateY(0); }
+  .btn-ghost { background: transparent; color: var(--text-muted); border: 1.5px solid var(--border); }
+  .btn-ghost:hover { border-color: var(--brand-light); color: var(--brand-dark); }
+
+  /* SUCCESS STATE */
+  .success-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(121,155,142,0.15);
+    backdrop-filter: blur(6px);
+    z-index: 999;
+    align-items: center;
+    justify-content: center;
+  }
+  .success-overlay.show { display: flex; }
+  .success-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 56px 48px;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+    max-width: 440px;
+    width: 90%;
+    animation: popIn 0.35s cubic-bezier(.34,1.56,.64,1);
+  }
+  @keyframes popIn { from { opacity:0; transform:scale(0.88); } to { opacity:1; transform:scale(1); } }
+  .success-icon { font-size: 52px; margin-bottom: 20px; }
+  .success-card h2 { font-family: 'Cormorant Garamond', serif; font-size: 24px; margin-bottom: 10px; color: var(--brand-dark); }
+  .success-card p { color: var(--text-muted); font-size: 14px; line-height: 1.8; margin-bottom: 28px; }
+  .success-card .dl-note { background: var(--brand-pale); border-radius: var(--radius-sm); padding: 14px 18px; font-size: 13px; color: var(--brand-dark); margin-bottom: 24px; }
+
+  /* RESPONSIVE */
+  @media (max-width: 600px) {
+    .header-bar { padding: 16px 20px; }
+    .form-title-card { padding: 24px 20px; }
+    .section-body { padding: 20px; }
+    .options-grid { grid-template-columns: 1fr; }
+    .options-grid.two-col { grid-template-columns: 1fr; }
+    .progress-area { display: none; }
+  }
+</style>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Noto+Serif+TC:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header-bar">
+  <div class="logo-area">
+    <img class="logo-img" src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAASABIAAD/4QCMRXhpZgAATU0AKgAAAAgABQESAAMAAAABAAEAAAEaAAUAAAABAAAASgEbAAUAAAABAAAAUgEoAAMAAAABAAIAAIdpAAQAAAABAAAAWgAAAAAAAABIAAAAAQAAAEgAAAABAAOgAQADAAAAAQABAACgAgAEAAAAAQAABCigAwAEAAAAAQAAAhQAAAAA/+0AOFBob3Rvc2hvcCAzLjAAOEJJTQQEAAAAAAAAOEJJTQQlAAAAAAAQ1B2M2Y8AsgTpgAmY7PhCfv/AABEIAhQEKAMBIgACEQEDEQH/xAAfAAABBQEBAQEBAQAAAAAAAAAAAQIDBAUGBwgJCgv/xAC1EAACAQMDAgQDBQUEBAAAAX0BAgMABBEFEiExQQYTUWEHInEUMoGRoQgjQrHBFVLR8CQzYnKCCQoWFxgZGiUmJygpKjQ1Njc4OTpDREVGR0hJSlNUVVZXWFlaY2RlZmdoaWpzdHV2d3h5eoOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4eLj5OXm5+jp6vHy8/T19vf4+fr/xAAfAQADAQEBAQEBAQEBAAAAAAAAAQIDBAUGBwgJCgv/xAC1EQACAQIEBAMEBwUEBAABAncAAQIDEQQFITEGEkFRB2FxEyIygQgUQpGhscEJIzNS8BVictEKFiQ04SXxFxgZGiYnKCkqNTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqCg4SFhoeIiYqSk5SVlpeYmZqio6Slpqeoqaqys7S1tre4ubrCw8TFxsfIycrS09TV1tfY2dri4+Tl5ufo6ery8/T19vf4+fr/2wBDAAICAgICAgQCAgQGBAQEBggGBgYGCAoICAgICAoMCgoKCgoKDAwMDAwMDAwODg4ODg4QEBAQEBISEhISEhISEhL/2wBDAQMDAwUEBQgEBAgTDQsNExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExP/3QAEAEP/2gAMAwEAAhEDEQA/AP38ooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooA//Q/fyiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigD/9H9/KKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKAP/0v38ooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooA//T/fyiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigD/9T9/KKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKAP/1f38ooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAoorxbx/8evAHgCV9Pup2vb5ODb22GZT6OxIVfcZ3e1BM5xgrydj2mivgTVP2w/Ecsjf2Lo9tCnOPPd5T7E7fL/L9ah079sLxXE6nV9JtJ17iFpIifoWMmPyNK5y/X6V7XP0BorwLwH+0b8PvGs6adcSNpd4/Cx3OAjH0WQfKfYNtJ7A177TOmFSM1eDuFFFFBYUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQB//1v38ooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiuL+InipPBPgnUvFDYLWsJMYPQyN8sYPsXIzQKUlFNs+Z/2ifjrd6LPL4B8GTeXcgYu7lD80ef8Almh7Nj7zdug5zj4MZmdizHJPJJqa6uri+upL28cySzMXd25LMxyST6k1BUnzdetKrLmYUUUUjEK+zf2ePjte219B4B8ZTGW3mIjs7hzlo26LGxPVT0U9QeOh4+MqUEqQynBFM1o1pUpc0T9v6K8o+CfjOTx18ObDV7tt91EDb3B7mSLjJ92XDH616vVH0kJKSUl1CiiigoKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigD//X/fyiiigAooooAKKKKACiiigAooooAKKx9f1/RfC2i3PiLxFcpZ2NmhkmmkOFRR3P8gByTwOa/GP4/fts+OPiHez+H/hzNLoehglA8Z2XVwM/edxzGp/uIRxkMTnAB2P1w8W/Fz4YeA5PI8Ya/Y6fMP8AllLOgl+vlgl8e+K8x/4a+/Zw/wChog/79T//ABqv5+JJHldpZWLMxySeSSepJplA7H9BX/DX37OH/Q0Qf9+p/wD41R/w19+zh/0NEH/fqf8A+NV/PrRQFj+gr/hr79nD/oaIP+/U/wD8ao/4a+/Zw/6GiD/v1P8A/Gq/n1ooCx/QV/w19+zh/wBDRB/36n/+NUf8Nffs4f8AQ0Qf9+p//jVfz60UBY/oK/4a+/Zw/wChog/79T//ABqj/hr79nD/AKGiD/v1P/8AGq/n1ooCx/QV/wANffs4f9DRB/36n/8AjVH/AA19+zh/0NEH/fqf/wCNV/PrRQFj+gr/AIa+/Zw/6GiD/v1P/wDGqP8Ahr79nD/oaIP+/U//AMar+fWigLH9Cdl+1l+zzqF5FYWfiaGSad1jRRFPyzHAHMeOSa+ia/mN8C/8jto//X9b/wDoxa/pyoE0FfMv7WN69r8L44FJAub6KM49Akj8/ior6ar5X/a7/wCSbWP/AGE4v/RM1BzYr+FI/OeiiioPnAooooAKKKKAPv79jy8kfwxrGnknbFdJIB2y6YP4/IM19hV8s/slaLLYfD251aYY+33bFPdI1CZ/763D8K+pqtH0WETVKNwooooOkKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigD/9D9/KKKKACiiigAooooAKKKKACiioLm4jtLaS6m+5EpdseijJoA/Hz9vn423XiLxevwg0KYjTtIKyXu08S3TDIU+qxKRx/fJyMqK/O2tzxNr994q8R3/ifUzm41G4luZT1+eVy5/U1h0FBRRRQMKKKKACiiigAooooAKKKKACiiigAooooA6rwL/wAjto//AF/W/wD6MWv6cq/mN8C/8jto/wD1/W//AKMWv6cqCWFfK/7Xf/JNrH/sJxf+iZq+qK+V/wBrv/km1j/2E4v/AETNQc2L/hSPznoooqD5wKKKKACum8H+FNW8beIrbw1oqbprlsZ7Io+87eyjk/l1qz4K8C+JviBq66N4ZtzNJwXc8Rxqf4nbsP1PYE1+m3wn+EOhfC3SjHan7RqFwoFxckYLY52qP4UB7dT1PbDSOvDYWVV3ex3/AIa0Cw8K6BaeHdMGILOJYl9Tgcsfdjyfc1uUUVR76VlZBRRRQMKKKKACiiigAooooAKKKKACiiigAr4s/aq/aB+K/wABtS0zUfDWjWd7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OesoooA8W8VfAL4eePPEbeI/HaXWs4ZWhtLq5lNnAVUL+7t1ZU56ncGySfbHqujaHovhzTo9I8P2kNjaRDCQ28axxr9FUAD8q1KKACuL8bfDnwL8R9O/srxxpVvqcIzt85AWTPUo4w6H3Ug12lFAHnHwz+E3gT4QaNPoPgGzNnbXExuJFaR5SXIC53SMxwAoAGa9HoooAKKKKACiiigAooooAKKKKAOB1r4Y+CPEPjbTPiJrFis+raOjx2sxJ+QP6rnaSuTtJB2kkjmu+oooA5TTvA3hHSfFV/4303T4YdW1NI47q6UfPIsf3Qe3pnGM4Gc4GOroooA8j8SfBTwR4q+KGj/FzVklOq6JCYYNrkRsMsyF17lC7lcEZLfNkAAeuUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAf/Q/fyiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigD/9H9/KKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKAP/0v38ooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooA//T/fyiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigD/9T9/KKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKAP/1f38ooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooA//W/fyiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigD/9f9/KKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKAP/0P38ooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooA//Z" alt="Half Design 泮空間設計">
+  </div>
+  <div class="progress-area">
+    <span id="progressLabel">第 1 節，共 4 節</span>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progressFill" style="width:25%"></div></div>
+  </div>
+</div>
+
+<!-- FORM -->
+<div class="form-wrap">
+  <div class="form-title-card">
+    <h1>客戶需求調查表<br><small style="font-size:16px;font-weight:400;color:var(--text-muted);">Client Requirements Survey</small></h1>
+    <p class="subtitle">感謝您填寫本調查表，將協助我們了解您的空間設計需求，以提供最符合您期待的專業服務。<br>Thank you for completing this survey. Your responses will help us provide the best design experience tailored to your needs.</p>
+  </div>
+
+  <form id="mainForm" novalidate>
+
+    <!-- ===== PAGE 1: BASIC INFO ===== -->
+    <div class="form-page" id="page1">
+
+      <!-- Section: 基本資訊 -->
+      <div class="section-header"><span class="icon">👤</span> 基本資訊 Basic Information</div>
+      <div class="section-card">
+        <div class="section-body">
+          <div class="field">
+            <div class="field-label">您的姓名 <span class="en">Your Name</span> <span class="req">*</span></div>
+            <input type="text" name="name" placeholder="請輸入姓名" required>
+          </div>
+          <div class="field">
+            <div class="field-label">聯絡電話 <span class="en">Contact Phone Number</span> <span class="req">*</span></div>
+            <input type="tel" name="phone" placeholder="請輸入手機號碼" required>
+          </div>
+          <div class="field">
+            <div class="field-label">電子郵件及 Line ID <span class="en">Email / Line ID</span></div>
+            <input type="text" name="email_line" placeholder="email 或 Line ID">
+          </div>
+          <div class="field">
+            <div class="field-label">方便聯繫時間 <span class="en">Available Time</span></div>
+            <div class="options-grid two-col">
+              <label class="opt-label"><input type="radio" name="available_time" value="平日白天"><span>平日白天 Weekday Daytime</span></label>
+              <label class="opt-label"><input type="radio" name="available_time" value="平日晚上"><span>平日晚上 Weekday Evening</span></label>
+              <label class="opt-label"><input type="radio" name="available_time" value="假日白天"><span>假日白天 Weekend Daytime</span></label>
+              <label class="opt-label"><input type="radio" name="available_time" value="假日晚上"><span>假日晚上 Weekend Evening</span></label>
+              <label class="opt-label other-field-wrap" style="grid-column:1/-1">
+                <input type="radio" name="available_time" value="其他">
+                <span>其他：</span>
+                <input class="other-text-input" type="text" name="available_time_other" placeholder="請說明">
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section: 空間資訊 -->
+      <div class="section-header"><span class="icon">🏠</span> 空間資訊 Space Information</div>
+      <div class="section-card">
+        <div class="section-body">
+          <div class="field">
+            <div class="field-label">設計類型 <span class="en">Type of Design Project</span> <span class="req">*</span></div>
+            <div class="options-grid single-col">
+              <label class="opt-label"><input type="radio" name="design_type" value="住宅空間設計"><span>住宅空間設計 Residential Design</span></label>
+              <label class="opt-label"><input type="radio" name="design_type" value="商業空間設計"><span>商業空間設計 Commercial Space Design</span></label>
+              <label class="opt-label"><input type="radio" name="design_type" value="辦公空間設計"><span>辦公空間設計 Office Space Design</span></label>
+              <label class="opt-label other-field-wrap">
+                <input type="radio" name="design_type" value="其他">
+                <span>其他：</span>
+                <input class="other-text-input" type="text" name="design_type_other" placeholder="請說明">
+              </label>
+            </div>
+          </div>
+          <div class="field">
+            <div class="field-label">空間地址 / 建案名稱 <span class="en">Project Address / Name</span></div>
+            <input type="text" name="project_address" placeholder="請輸入地址或建案名稱">
+          </div>
+          <div class="field">
+            <div class="field-label">空間坪數 <span class="en">Square Footage (坪)</span> <span class="req">*</span></div>
+            <input type="text" name="area_ping" placeholder="例：35 坪" required>
+          </div>
+          <div class="field">
+            <div class="field-label">預計開始設計 / 裝修日期 <span class="en">Estimated Start Date</span></div>
+            <input type="date" name="start_date">
+          </div>
+          <div class="field">
+            <div class="field-label">空間現狀 <span class="en">Current Status of the Space</span></div>
+            <div class="options-grid single-col">
+              <label class="opt-label"><input type="radio" name="space_status" value="預售屋客變"><span>預售屋客變 Customer Variation</span></label>
+              <label class="opt-label"><input type="radio" name="space_status" value="新成屋"><span>新成屋 New Construction / Finished Apartment</span></label>
+              <label class="opt-label"><input type="radio" name="space_status" value="全新毛胚屋"><span>全新毛胚屋 Brand New Shell / Bare Concrete</span></label>
+              <label class="opt-label"><input type="radio" name="space_status" value="中古屋老屋翻新"><span>中古屋 / 老屋翻新 Used / Old House Renovation</span></label>
+              <label class="opt-label other-field-wrap">
+                <input type="radio" name="space_status" value="其他">
+                <span>其他：</span>
+                <input class="other-text-input" type="text" name="space_status_other" placeholder="請說明">
+              </label>
+            </div>
+          </div>
+          <div class="field">
+            <div class="field-label">主要設計需求 <span class="en">Main Design Requirements</span> <small style="color:var(--text-muted)">(可複選)</small></div>
+            <div class="options-grid single-col">
+              <label class="opt-label"><input type="checkbox" name="main_req" value="預售屋客變"><span>預售屋客變 Customer Variation</span></label>
+              <label class="opt-label"><input type="checkbox" name="main_req" value="室內設計規劃"><span>室內設計規劃 Interior Design Planning</span></label>
+              <label class="opt-label"><input type="checkbox" name="main_req" value="室內裝修工程"><span>室內裝修工程 Interior Renovation Project</span></label>
+              <label class="opt-label"><input type="checkbox" name="main_req" value="軟裝及家具規劃"><span>軟裝及家具規劃 Soft Furnishings and Furniture Arrangement</span></label>
+              <label class="opt-label other-field-wrap">
+                <input type="checkbox" name="main_req" value="其他">
+                <span>其他：</span>
+                <input class="other-text-input" type="text" name="main_req_other" placeholder="請說明">
+              </label>
+            </div>
+          </div>
+          <div class="field">
+            <div class="field-label">預算範圍 <span class="en">Budget Range</span></div>
+            <select name="budget">
+              <option value="">請選擇 / Please select</option>
+              <option value="100萬以下">新台幣 100 萬以下 (Under TWD 1M)</option>
+              <option value="100-200萬">新台幣 100 萬 – 200 萬 (TWD 1M – 2M)</option>
+              <option value="200-350萬">新台幣 200 萬 – 350 萬 (TWD 2M – 3.5M)</option>
+              <option value="350-500萬">新台幣 350 萬 – 500 萬 (TWD 3.5M – 5M)</option>
+              <option value="500萬以上">新台幣 500 萬以上 (Over TWD 5M)</option>
+              <option value="待討論">待與設計師討論 To be discussed</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; margin-bottom:12px;">
+        <button type="button" class="btn btn-primary" onclick="goPage(2)">繼續 Continue →</button>
+      </div>
+    </div>
+
+    <!-- ===== PAGE 2: RESIDENT PROFILE ===== -->
+    <div class="form-page" id="page2" style="display:none">
+
+      <div class="section-header"><span class="icon">🏡</span> 居住者資訊 Resident Profile</div>
+      <div class="section-card">
+        <div class="section-body">
+          <div class="field">
+            <div class="field-label">非住宅空間 <span class="en">Non-Residential Space</span></div>
+            <label class="opt-label"><input type="checkbox" name="non_residential" value="是"><span>非住宅空間請勾選此項後繼續提交（此頁後續欄位可略填）</span></label>
+          </div>
+          <div class="field">
+            <div class="field-label">您的職業 <span class="en">Your Profession</span></div>
+            <input type="text" name="profession" placeholder="請輸入職業">
+          </div>
+          <div class="field">
+            <div class="field-label">家庭成員 / 使用者組成 <span class="en">Family Members / Users</span></div>
+            <textarea name="family_members" placeholder="例：夫妻兩人 + 一個小孩（5歲）+ 長輩同住"></textarea>
+          </div>
+          <div class="field">
+            <div class="field-label">興趣喜好 <span class="en">Interests &amp; Preferences</span></div>
+            <textarea name="interests" placeholder="例：喜歡閱讀、收藏藝術品、家中有養寵物…"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section: 空間需求 -->
+      <div class="section-header"><span class="icon">📐</span> 空間需求 Space Requirements</div>
+      <div class="section-card">
+        <div class="section-body">
+          <div class="field">
+            <div class="field-label">需要設計的空間 <span class="en">Spaces to Design</span> <small style="color:var(--text-muted)">(可複選)</small></div>
+            <div class="options-grid two-col">
+              <label class="opt-label"><input type="checkbox" name="spaces" value="玄關"><span>玄關 Foyer/Entry</span></label>
+              <label class="opt-label"><input type="checkbox" name="spaces" value="儲藏室"><span>儲藏室 Storage Room</span></label>
+              <label class="opt-label"><input type="checkbox" name="spaces" value="客廳"><span>客廳 Living Room</span></label>
+              <label class="opt-label"><input type="checkbox" name="spaces" value="餐廳"><span>餐廳 Dining Room</span></label>
+              <label class="opt-label"><input type="checkbox" name="spaces" value="廚房"><span>廚房 Kitchen</span></label>
+              <label class="opt-label"><input type="checkbox" name="spaces" value="客用衛浴"><span>客用衛浴 Guest Bathroom</span></label>
+              <label class="opt-label"><input type="checkbox" name="spaces" value="主臥衛浴"><span>主臥衛浴 Master Bathroom</span></label>
+              <label class="opt-label"><input type="checkbox" name="spaces" value="主臥房"><span>主臥房 Master Bedroom</span></label>
+              <label class="opt-label"><input type="checkbox" name="spaces" value="孝親房"><span>孝親房 Parent's Room</span></label>
+              <label class="opt-label"><input type="checkbox" name="spaces" value="小孩房"><span>小孩房 Children's Room</span></label>
+              <label class="opt-label"><input type="checkbox" name="spaces" value="客房"><span>客房 Guest Room</span></label>
+              <label class="opt-label other-field-wrap" style="grid-column:1/-1">
+                <input type="checkbox" name="spaces" value="其他">
+                <span>其他：</span>
+                <input class="other-text-input" type="text" name="spaces_other" placeholder="請說明">
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
+        <button type="button" class="btn btn-ghost" onclick="goPage(1)">← 返回</button>
+        <button type="button" class="btn btn-primary" onclick="goPage(3)">繼續 Continue →</button>
+      </div>
+    </div>
+
+    <!-- ===== PAGE 3: ROOM-BY-ROOM REQUIREMENTS ===== -->
+    <div class="form-page" id="page3" style="display:none">
+
+      <!-- 玄關/儲藏室 -->
+      <div class="section-header"><span class="icon">🚪</span> 玄關 / 儲藏室需求 Foyer / Storage</div>
+      <div class="section-card">
+        <div class="section-body">
+          <div class="options-grid two-col item-grid">
+            <label class="opt-label"><input type="checkbox" name="foyer" value="鑰匙"><span>🔑 鑰匙 Keys</span></label>
+            <label class="opt-label"><input type="checkbox" name="foyer" value="包包"><span>👜 包包 Bags</span></label>
+            <label class="opt-label"><input type="checkbox" name="foyer" value="外衣"><span>🧥 外衣 Outerwear</span></label>
+            <label class="opt-label"><input type="checkbox" name="foyer" value="襪子"><span>🧦 襪子 Socks</span></label>
+            <label class="opt-label"><input type="checkbox" name="foyer" value="雨傘"><span>☂️ 雨傘 Umbrellas</span></label>
+            <label class="opt-label"><input type="checkbox" name="foyer" value="安全帽"><span>⛑️ 安全帽 Helmets</span></label>
+            <label class="opt-label"><input type="checkbox" name="foyer" value="工具箱"><span>🧰 工具箱 Toolbox</span></label>
+            <label class="opt-label"><input type="checkbox" name="foyer" value="吸塵器"><span>🧹 吸塵器 Vacuum</span></label>
+            <label class="opt-label"><input type="checkbox" name="foyer" value="行李箱"><span>🧳 行李箱 Luggage</span></label>
+            <label class="opt-label"><input type="checkbox" name="foyer" value="全身鏡"><span>🪞 全身鏡 Full-length Mirror</span></label>
+            <label class="opt-label"><input type="checkbox" name="foyer" value="運動用品"><span>🏃 運動用品 Sports Equipment</span></label>
+            <label class="opt-label"><input type="checkbox" name="foyer" value="穿鞋椅"><span>🪑 穿鞋椅 Shoe Bench</span></label>
+            <label class="opt-label other-field-wrap" style="grid-column:1/-1">
+              <input type="checkbox" name="foyer" value="其他">
+              <span>其他：</span>
+              <input class="other-text-input" type="text" name="foyer_other" placeholder="">
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- 客廳 -->
+      <div class="section-header"><span class="icon">🛋️</span> 客廳需求 Living Room</div>
+      <div class="section-card">
+        <div class="section-body">
+          <div class="options-grid two-col item-grid">
+            <label class="opt-label"><input type="checkbox" name="living" value="電視"><span>📺 電視 TV</span></label>
+            <label class="opt-label"><input type="checkbox" name="living" value="投影幕"><span>📽️ 投影幕 Projector Screen</span></label>
+            <label class="opt-label"><input type="checkbox" name="living" value="音響系統"><span>🔊 音響系統 Sound System</span></label>
+            <label class="opt-label"><input type="checkbox" name="living" value="智能規劃"><span>🤖 智能規劃 Smart Home</span></label>
+            <label class="opt-label"><input type="checkbox" name="living" value="掃地機器人"><span>🔄 掃地機器人 Robot Vacuum</span></label>
+            <label class="opt-label"><input type="checkbox" name="living" value="書籍"><span>📚 書籍 Books</span></label>
+            <label class="opt-label"><input type="checkbox" name="living" value="樂器"><span>🎹 樂器 Instruments</span></label>
+            <label class="opt-label"><input type="checkbox" name="living" value="收藏品"><span>🏺 收藏品 Collections</span></label>
+            <label class="opt-label"><input type="checkbox" name="living" value="沙發"><span>🛋️ 沙發 Sofa</span></label>
+            <label class="opt-label"><input type="checkbox" name="living" value="單椅"><span>🪑 單椅 Armchair</span></label>
+            <label class="opt-label"><input type="checkbox" name="living" value="按摩椅"><span>💆 按摩椅 Massage Chair</span></label>
+            <label class="opt-label"><input type="checkbox" name="living" value="茶几"><span>☕ 茶几 Coffee Table</span></label>
+            <label class="opt-label other-field-wrap" style="grid-column:1/-1">
+              <input type="checkbox" name="living" value="其他">
+              <span>其他：</span>
+              <input class="other-text-input" type="text" name="living_other" placeholder="">
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- 餐廳 -->
+      <div class="section-header"><span class="icon">🍽️</span> 餐廳需求 Dining Room</div>
+      <div class="section-card">
+        <div class="section-body">
+          <div class="options-grid two-col item-grid">
+            <label class="opt-label"><input type="checkbox" name="dining" value="長桌"><span>🟫 長桌 Rectangular Table</span></label>
+            <label class="opt-label"><input type="checkbox" name="dining" value="圓桌"><span>⭕ 圓桌 Round Table</span></label>
+            <label class="opt-label"><input type="checkbox" name="dining" value="餐邊櫃"><span>🗄️ 餐邊櫃 Sideboard</span></label>
+            <label class="opt-label"><input type="checkbox" name="dining" value="電器櫃"><span>📦 電器櫃 Appliance Cabinet</span></label>
+            <label class="opt-label"><input type="checkbox" name="dining" value="咖啡機"><span>☕ 咖啡機 Coffee Machine</span></label>
+            <label class="opt-label other-field-wrap" style="grid-column:1/-1">
+              <input type="checkbox" name="dining" value="其他">
+              <span>其他：</span>
+              <input class="other-text-input" type="text" name="dining_other" placeholder="">
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- 廚房 -->
+      <div class="section-header"><span class="icon">🍳</span> 廚房需求 Kitchen</div>
+      <div class="section-card">
+        <div class="section-body">
+          <div class="sub-label">廚房型式 Layout Style</div>
+          <div class="options-grid two-col" style="margin-bottom:18px">
+            <label class="opt-label"><input type="checkbox" name="kitchen" value="開放式"><span>🔓 開放式 Open</span></label>
+            <label class="opt-label"><input type="checkbox" name="kitchen" value="獨立式"><span>🔒 獨立式 Closed</span></label>
+            <label class="opt-label"><input type="checkbox" name="kitchen" value="半開放式"><span>🔆 半開放式 Semi-open</span></label>
+          </div>
+          <div class="sub-label">廚房電器 Appliances</div>
+          <div class="options-grid two-col item-grid">
+            <label class="opt-label"><input type="checkbox" name="kitchen" value="電鍋"><span>🍚 電鍋 Rice Cooker</span></label>
+            <label class="opt-label"><input type="checkbox" name="kitchen" value="烤箱"><span>🥧 烤箱 Oven</span></label>
+            <label class="opt-label"><input type="checkbox" name="kitchen" value="微波爐"><span>📡 微波爐 Microwave</span></label>
+            <label class="opt-label"><input type="checkbox" name="kitchen" value="櫥下飲水機"><span>💧 櫥下飲水機 Under-sink Water Purifier</span></label>
+            <label class="opt-label"><input type="checkbox" name="kitchen" value="熱水瓶"><span>♨️ 熱水瓶 Kettle</span></label>
+            <label class="opt-label"><input type="checkbox" name="kitchen" value="紅酒櫃"><span>🍷 紅酒櫃 Wine Fridge</span></label>
+            <label class="opt-label"><input type="checkbox" name="kitchen" value="日系冰箱"><span>🧊 日系冰箱 Japanese-style Fridge</span></label>
+            <label class="opt-label"><input type="checkbox" name="kitchen" value="歐系冰箱"><span>🧊 歐系冰箱 European-style Fridge</span></label>
+            <label class="opt-label"><input type="checkbox" name="kitchen" value="中島吧台"><span>🍹 中島吧台 Kitchen Island</span></label>
+            <label class="opt-label other-field-wrap" style="grid-column:1/-1">
+              <input type="checkbox" name="kitchen" value="其他">
+              <span>其他：</span>
+              <input class="other-text-input" type="text" name="kitchen_other" placeholder="">
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
+        <button type="button" class="btn btn-ghost" onclick="goPage(2)">← 返回</button>
+        <button type="button" class="btn btn-primary" onclick="goPage(4)">繼續 Continue →</button>
+      </div>
+    </div>
+
+    <!-- ===== PAGE 4: BEDROOM / BATHROOM / CLOSET ===== -->
+    <div class="form-page" id="page4" style="display:none">
+
+      <!-- 臥室 -->
+      <div class="section-header"><span class="icon">🛏️</span> 臥室需求 Bedroom</div>
+      <div class="section-card">
+        <div class="section-body">
+          <div class="options-grid two-col item-grid">
+            <label class="opt-label"><input type="checkbox" name="bedroom" value="電視"><span>📺 電視 TV</span></label>
+            <label class="opt-label"><input type="checkbox" name="bedroom" value="保險箱"><span>🔐 保險箱 Safe</span></label>
+            <label class="opt-label"><input type="checkbox" name="bedroom" value="衣櫃收納"><span>👔 衣櫃收納 Wardrobe</span></label>
+            <label class="opt-label"><input type="checkbox" name="bedroom" value="書桌"><span>✏️ 書桌 Desk</span></label>
+            <label class="opt-label"><input type="checkbox" name="bedroom" value="化妝桌"><span>💄 化妝桌 Vanity Table</span></label>
+            <label class="opt-label other-field-wrap" style="grid-column:1/-1">
+              <input type="checkbox" name="bedroom" value="其他">
+              <span>其他：</span>
+              <input class="other-text-input" type="text" name="bedroom_other" placeholder="">
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- 更衣室 -->
+      <div class="section-header"><span class="icon">👗</span> 更衣室需求 Dressing Room</div>
+      <div class="section-card">
+        <div class="section-body">
+          <div class="sub-label">更衣室型式</div>
+          <div class="options-grid two-col item-grid" style="margin-bottom:18px">
+            <label class="opt-label"><input type="checkbox" name="dressing" value="與臥室結合"><span>🔗 與臥室結合 Integrated</span></label>
+            <label class="opt-label"><input type="checkbox" name="dressing" value="步入式更衣間"><span>🚪 步入式 Walk-in</span></label>
+            <label class="opt-label"><input type="checkbox" name="dressing" value="半開放式更衣間"><span>🔆 半開放式 Semi-open</span></label>
+          </div>
+          <div class="sub-label">收納需求</div>
+          <div class="options-grid two-col item-grid">
+            <label class="opt-label"><input type="checkbox" name="dressing" value="吊掛衣服多"><span>👔 吊掛衣服多 More Hanging</span></label>
+            <label class="opt-label"><input type="checkbox" name="dressing" value="摺衣收納多"><span>👕 摺衣收納多 More Folding</span></label>
+            <label class="opt-label"><input type="checkbox" name="dressing" value="包包"><span>👜 包包 Bags</span></label>
+            <label class="opt-label"><input type="checkbox" name="dressing" value="行李箱"><span>🧳 行李箱 Luggage</span></label>
+            <label class="opt-label"><input type="checkbox" name="dressing" value="收納箱"><span>📦 收納箱 Storage Boxes</span></label>
+            <label class="opt-label"><input type="checkbox" name="dressing" value="飾品手錶皮帶收納"><span>💍 飾品 / 手錶 / 皮帶 Accessories</span></label>
+            <label class="opt-label"><input type="checkbox" name="dressing" value="汙衣區"><span>🧺 汙衣區 Laundry Zone</span></label>
+            <label class="opt-label"><input type="checkbox" name="dressing" value="化妝區"><span>💄 化妝區 Makeup Area</span></label>
+            <label class="opt-label other-field-wrap" style="grid-column:1/-1">
+              <input type="checkbox" name="dressing" value="其他">
+              <span>其他：</span>
+              <input class="other-text-input" type="text" name="dressing_other" placeholder="">
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- 浴室 -->
+      <div class="section-header"><span class="icon">🚿</span> 浴室需求 Bathroom</div>
+      <div class="section-card">
+        <div class="section-body">
+          <div class="options-grid two-col item-grid">
+            <label class="opt-label"><input type="checkbox" name="bathroom" value="乾濕分離"><span>💦 乾濕分離 Wet/Dry Separation</span></label>
+            <label class="opt-label"><input type="checkbox" name="bathroom" value="免治馬桶"><span>🚽 免治馬桶 Bidet</span></label>
+            <label class="opt-label"><input type="checkbox" name="bathroom" value="安全扶手"><span>🤲 安全扶手 Safety Handrails</span></label>
+            <label class="opt-label"><input type="checkbox" name="bathroom" value="清潔用品收納"><span>🧴 清潔用品收納 Cleaning Storage</span></label>
+            <label class="opt-label"><input type="checkbox" name="bathroom" value="保養品收納"><span>✨ 保養品收納 Skincare Storage</span></label>
+            <label class="opt-label"><input type="checkbox" name="bathroom" value="四合一抽風暖風機"><span>💨 四合一抽風暖風機 4-in-1 Ventilation</span></label>
+            <label class="opt-label"><input type="checkbox" name="bathroom" value="檯面式面盆"><span>🪣 檯面式面盆 Countertop Basin</span></label>
+            <label class="opt-label"><input type="checkbox" name="bathroom" value="馬桶清潔龍頭"><span>🚿 馬桶清潔龍頭 Toilet Bidet Tap</span></label>
+            <label class="opt-label"><input type="checkbox" name="bathroom" value="獨立式浴缸"><span>🛁 獨立式浴缸 Freestanding Bathtub</span></label>
+            <label class="opt-label"><input type="checkbox" name="bathroom" value="下嵌式浴缸"><span>🛁 下嵌式浴缸 Drop-in Bathtub</span></label>
+            <label class="opt-label"><input type="checkbox" name="bathroom" value="捲筒衛生紙"><span>🧻 捲筒衛生紙 Roll TP</span></label>
+            <label class="opt-label"><input type="checkbox" name="bathroom" value="抽取衛生紙"><span>🤧 抽取衛生紙 Tissue Box</span></label>
+            <label class="opt-label other-field-wrap" style="grid-column:1/-1">
+              <input type="checkbox" name="bathroom" value="其他">
+              <span>其他：</span>
+              <input class="other-text-input" type="text" name="bathroom_other" placeholder="">
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- 備註 -->
+      <div class="section-header"><span class="icon">📝</span> 其他備註 Additional Notes</div>
+      <div class="section-card">
+        <div class="section-body">
+          <div class="field">
+            <div class="field-label">有無特殊需求或補充說明 <span class="en">Any Special Requirements</span></div>
+            <textarea name="notes" rows="5" placeholder="請填寫任何希望設計師了解的事項，例如：特殊習慣、過敏材質、寵物、無障礙需求等…"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
+        <button type="button" class="btn btn-ghost" onclick="goPage(3)">← 返回</button>
+        <button type="button" class="btn btn-primary" onclick="submitForm()">✅ 提交表單 Submit</button>
+      </div>
+    </div>
+
+  </form>
+</div>
+
+<!-- SUCCESS OVERLAY -->
+<div class="success-overlay" id="successOverlay">
+  <div class="success-card">
+    <div class="success-icon">✅</div>
+    <h2>感謝您的填寫！</h2>
+    <p>您的需求調查表已成功提交。<br>我們的設計師將盡快與您聯繫。<br>Thank you — we'll be in touch soon.</p>
+    <button class="btn btn-primary" onclick="location.reload()">重新填寫 / Fill Again</button>
+  </div>
+</div>
+
+<script>
+let currentPage = 1;
+const totalPages = 4;
+
+function goPage(n) {
+  document.getElementById('page' + currentPage).style.display = 'none';
+  document.getElementById('page' + n).style.display = 'block';
+  currentPage = n;
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function updateProgress() {
+  const pct = (currentPage / totalPages) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+  const labels = ['第 1 節，共 4 節','第 2 節，共 4 節','第 3 節，共 4 節','第 4 節，共 4 節'];
+  document.getElementById('progressLabel').textContent = labels[currentPage - 1];
+}
+
+function getChecked(name) {
+  return [...document.querySelectorAll(`input[name="${name}"]:checked`)].map(el => el.value).join('、');
+}
+function getVal(name) {
+  const el = document.querySelector(`[name="${name}"]`);
+  return el ? el.value : '';
+}
+function getRadio(name) {
+  const el = document.querySelector(`input[name="${name}"]:checked`);
+  return el ? el.value : '';
+}
+function withOther(base, otherName) {
+  const otherEl = document.querySelector(`[name="${otherName}"]`);
+  const other = otherEl ? otherEl.value.trim() : '';
+  if (base.includes('其他') && other) return base.replace('其他', '其他：' + other);
+  return base;
+}
+
+// ★ 請將下方網址替換為您的 Apps Script 部署網址
+const APPS_SCRIPT_URL = 'YOUR_APPS_SCRIPT_URL_HERE';
+
+function collectData() {
+  return {
+    '填寫日期': new Date().toLocaleString('zh-TW'),
+    '姓名': getVal('name'),
+    '聯絡電話': getVal('phone'),
+    '電子郵件_Line_ID': getVal('email_line'),
+    '方便聯繫時間': withOther(getRadio('available_time'), 'available_time_other'),
+    '設計類型': withOther(getRadio('design_type'), 'design_type_other'),
+    '空間地址_建案名稱': getVal('project_address'),
+    '空間坪數': getVal('area_ping'),
+    '預計開始日期': getVal('start_date'),
+    '空間現狀': withOther(getRadio('space_status'), 'space_status_other'),
+    '主要設計需求': withOther(getChecked('main_req'), 'main_req_other'),
+    '預算範圍': getVal('budget'),
+    '是否非住宅': getChecked('non_residential') ? '是' : '否',
+    '職業': getVal('profession'),
+    '家庭成員_使用者': getVal('family_members'),
+    '興趣喜好': getVal('interests'),
+    '需設計空間': withOther(getChecked('spaces'), 'spaces_other'),
+    '玄關_儲藏室需求': withOther(getChecked('foyer'), 'foyer_other'),
+    '客廳需求': withOther(getChecked('living'), 'living_other'),
+    '餐廳需求': withOther(getChecked('dining'), 'dining_other'),
+    '廚房需求': withOther(getChecked('kitchen'), 'kitchen_other'),
+    '臥室需求': withOther(getChecked('bedroom'), 'bedroom_other'),
+    '更衣室需求': withOther(getChecked('dressing'), 'dressing_other'),
+    '浴室需求': withOther(getChecked('bathroom'), 'bathroom_other'),
+    '其他備註': getVal('notes'),
+  };
+}
+
+async function submitForm() {
+  if (APPS_SCRIPT_URL === 'https://script.google.com/macros/s/AKfycbyMeDAolrGMiC1pMc-44goNMzPEVyq7L8Xm_XPu3T2_UqPNEUYJnSNx2v1UAGWwBK1oQA/exec') {
+    alert('⚠️ 請先設定 Apps Script 網址（請見操作說明）');
+    return;
+  }
+
+  // Show loading state on button
+  const btn = document.querySelector('#page4 .btn-primary');
+  const originalText = btn.innerHTML;
+  btn.innerHTML = '⏳ 提交中...';
+  btn.disabled = true;
+
+  try {
+    const data = collectData();
+    await fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    // no-cors means we can't read response, but if no error thrown it succeeded
+    document.getElementById('successOverlay').classList.add('show');
+  } catch (err) {
+    alert('❌ 提交失敗，請檢查網路連線後再試。\n' + err.message);
+    btn.innerHTML = originalText;
+    btn.disabled = false;
+  }
+}
+</script>
+</body>
+</html>
